@@ -54,3 +54,8 @@ docker compose run nome_do_service bash
 ```bash
 docker compose exec nome_do_service bash
 ```
+
+### 5 - Abrindo a aplicação
+
+- Em geral devem estar disponíveis acessando `localhost:PORT`
+- Ex: `localhost:3000`
