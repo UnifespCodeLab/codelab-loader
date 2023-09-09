@@ -1,0 +1,12 @@
+/**/*
+!envs/
+!configs/
+!envs/*.env.sample
+!boot.sh
+!.cli_utils.sh
+!docker-compose.yml
+!README.yml
+!secrets.sh
+!secrets.rb
+!required_dinamic_envvars.sh
+!.gitignore
