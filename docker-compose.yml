@@ -1,0 +1,49 @@
+version: "3.5"
+
+services:
+  emtu-db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-1234}
+      PGDATA: /data/postgres
+    volumes:
+      - ./data/postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - emtu_network
+    restart: unless-stopped
+
+  emtu-api:
+    build:
+      context: ./emtu-api/
+      dockerfile: Dockerfile
+    volumes:
+      - ./emtu-api:/app
+    ports:
+      - 3333:3333
+      - 9229:9229
+    env_file:
+      - ./emtu-api/.env
+    depends_on:
+      - emtu-db
+    networks:
+      - emtu_network
+
+  emtu-web:
+    tty: true
+    stdin_open: true
+    env_file:
+      - ./emtu-web/.env
+    image: node:16
+    working_dir: /app
+    command: make emtu-web-startup
+    ports:
+      - 3000:3000
+    volumes:
+      - ./emtu-web:/app
+
+networks:
+  emtu_network:
+    driver: bridge
