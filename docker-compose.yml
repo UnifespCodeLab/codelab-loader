@@ -9,6 +9,7 @@ services:
       PGDATA: /data/postgres
     volumes:
       - ./data/postgres:/data/postgres
+      - ./emtu-api:/node_app
     ports:
       - "5432:5432"
     networks:
