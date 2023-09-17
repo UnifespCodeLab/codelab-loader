@@ -11,7 +11,7 @@ services:
       - ./data/postgres:/data/postgres
       - ./emtu-api:/node_app
     ports:
-      - "5432:5432"
+      - "54320:5432"
     networks:
       - emtu_network
     restart: unless-stopped
