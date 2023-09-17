@@ -17,9 +17,14 @@ services:
     restart: unless-stopped
 
   emtu-api:
-    build:
-      context: ./emtu-api/
-      dockerfile: Dockerfile
+    tty: true
+    stdin_open: true
+    image: node:16
+    command: make emtu-api-startup
+    # build:
+    #   context: ./emtu-api/
+    #   dockerfile: Dockerfile
+    working_dir: /app
     volumes:
       - ./emtu-api:/app
     ports:
