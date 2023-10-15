@@ -8,21 +8,10 @@ Repositório que centraliza os containers de cada aplicação
 
 - Dentro da pasta raiz do `codelab-loader` execute: `git clone https://github.com/UnifespCodeLab/emtu-web.git`
 
-### 2 - Configurando pasta
+### 2 - Configurando pastas e envs
 
-- Entre na pasta do projeto e crie um arquivo `.env` e adicione as variáveis de ambiente necessárias (este passo é obrigatório)
-- Ex:
-
-```bash
-  cd emtu-web
-  touch .env
-```
-
-- No arquivo `.env` cole:
-
-```
-PORT=3000
-```
+- (este passo é obrigatório) Execute `./boot.sh`
+- Serão criadas todas as envs baseadas no .env.sample de cada service
 
 ### 3 - Executando
 
