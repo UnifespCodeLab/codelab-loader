@@ -1,55 +1,101 @@
 version: "3.5"
 
 services:
-  emtu-db:
+  # emtu-db:
+  #   image: postgres:13
+  #   environment:
+  #     POSTGRES_USER: ${POSTGRES_USER:-postgres}
+  #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-1234}
+  #     PGDATA: /data/postgres
+  #   volumes:
+  #     - ./data/postgres:/data/postgres
+  #     - ./emtu-api:/node_app
+  #   ports:
+  #     - "54320:5432"
+  #   networks:
+  #     - emtu_network
+  #   restart: unless-stopped
+
+  # emtu-api:
+  #   tty: true
+  #   stdin_open: true
+  #   image: node:16
+  #   command: make emtu-api-startup
+  #   # build:
+  #   #   context: ./emtu-api/
+  #   #   dockerfile: Dockerfile
+  #   working_dir: /app
+  #   volumes:
+  #     - ./emtu-api:/app
+  #   ports:
+  #     - 3333:3333
+  #     - 9229:9229
+  #   env_file:
+  #     - ./emtu-api/.env
+  #   depends_on:
+  #     - emtu-db
+  #   networks:
+  #     - emtu_network
+
+  # emtu-web:
+  #   tty: true
+  #   stdin_open: true
+  #   env_file:
+  #     - ./emtu-web/.env
+  #   image: node:16
+  #   working_dir: /app
+  #   command: make emtu-web-startup
+  #   ports:
+  #     - 3000:3000
+  #   volumes:
+  #     - ./emtu-web:/app
+
+  plasmedis-api:
+    image: thisk8brd/flask-api
+    build:
+      context: ./plasmedis-api
+      dockerfile: ./Dockerfile
+      target: debug
+    ports:
+      - 5000:5000
+      - 5678:5678
+    volumes:
+      - ./plasmedis-api:/usr/src/app
+    environment:
+      - FLASK_DEBUG=1
+    env_file:
+      - ./plasmedis-api/.env
+    depends_on:
+      - plasmedis-db
+    entrypoint: [ "python", "-m", "debugpy", "--listen", "0.0.0.0:5678", "-m", "app",  "--wait-for-client", "--multiprocess", "-m", "flask", "run", "-h", "0.0.0.0", "-p", "5000" ]
+
+  plasmedis-db:
     image: postgres:13
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-1234}
       PGDATA: /data/postgres
-    volumes:
-      - ./data/postgres:/data/postgres
-      - ./emtu-api:/node_app
     ports:
-      - "54320:5432"
-    networks:
-      - emtu_network
+      - "5432:5432"
     restart: unless-stopped
-
-  emtu-api:
-    tty: true
-    stdin_open: true
-    image: node:16
-    command: make emtu-api-startup
-    # build:
-    #   context: ./emtu-api/
-    #   dockerfile: Dockerfile
-    working_dir: /app
     volumes:
-      - ./emtu-api:/app
-    ports:
-      - 3333:3333
-      - 9229:9229
-    env_file:
-      - ./emtu-api/.env
-    depends_on:
-      - emtu-db
+      - ./data/postgres-plasmedis:/data/postgres
     networks:
-      - emtu_network
+      - plasmedis_network
 
-  emtu-web:
-    tty: true
-    stdin_open: true
-    env_file:
-      - ./emtu-web/.env
-    image: node:16
-    working_dir: /app
-    command: make emtu-web-startup
-    ports:
-      - 3000:3000
+  plasmedis-web:
+    build:
+      context: ./plasmedis-web
+      dockerfile: ./Dockerfile
     volumes:
-      - ./emtu-web:/app
+      -  ./plasmedis-web:/app
+    ports:
+      - 3001:3001
+    env_file:
+      - ./plasmedis-web/.env
 
 networks:
   emtu_network:
+    driver: bridge
+  plasmedis_network:
     driver: bridge
