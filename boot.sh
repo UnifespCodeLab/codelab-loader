@@ -20,6 +20,8 @@ for service in "${services[@]}"; do
         echo "Criando $env_file..."
 
         # Copia o conteúdo do arquivo .env.sample para o novo arquivo .env
+        mkdir "${service}"
+        touch "${service}/.env"
         cp "$env_sample" "$env_file"
 
         echo "Arquivo $env_file criado com sucesso."
