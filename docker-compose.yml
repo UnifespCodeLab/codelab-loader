@@ -84,15 +84,18 @@ services:
       - plasmedis_network
 
   plasmedis-web:
-    build:
-      context: ./plasmedis-web
-      dockerfile: ./Dockerfile
-    volumes:
-      -  ./plasmedis-web:/app
-    ports:
-      - 3001:3001
+    tty: true
+    stdin_open: true
     env_file:
       - ./plasmedis-web/.env
+    image: node:16
+    working_dir: /app
+    command: make plasmedis-web-startup
+    ports:
+      - 3001:3000
+    volumes:
+      -  ./plasmedis-web:/app
+
 
 networks:
   emtu_network:
