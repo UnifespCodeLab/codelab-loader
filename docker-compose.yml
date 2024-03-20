@@ -50,6 +50,55 @@ services:
     volumes:
       - ./emtu-web:/app
 
+  plasmedis-api:
+    image: thisk8brd/flask-api
+    build:
+      context: ./plasmedis-api
+      dockerfile: ./Dockerfile
+      target: debug
+    ports:
+      - 5000:5000
+      - 5678:5678
+    volumes:
+      - ./plasmedis-api:/usr/src/app
+    environment:
+      - FLASK_DEBUG=1
+    env_file:
+      - ./plasmedis-api/.env
+    depends_on:
+      - plasmedis-db
+    entrypoint: [ "python", "-m", "debugpy", "--listen", "0.0.0.0:5678", "-m", "app",  "--wait-for-client", "--multiprocess", "-m", "flask", "run", "-h", "0.0.0.0", "-p", "5000" ]
+
+  plasmedis-db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-1234}
+      PGDATA: /data/postgres
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    volumes:
+      - ./data/postgres-plasmedis:/data/postgres
+    networks:
+      - plasmedis_network
+
+  plasmedis-web:
+    tty: true
+    stdin_open: true
+    env_file:
+      - ./plasmedis-web/.env
+    image: node:16
+    working_dir: /app
+    command: make plasmedis-web-startup
+    ports:
+      - 3001:3000
+    volumes:
+      -  ./plasmedis-web:/app
+
+
 networks:
   emtu_network:
+    driver: bridge
+  plasmedis_network:
     driver: bridge
