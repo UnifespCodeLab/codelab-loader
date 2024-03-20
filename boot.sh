@@ -4,6 +4,8 @@
 services=(
     "emtu-web"
     "emtu-api"
+    "plasmedis-api"
+    "plasmedis-web"
 )
 
 # Itera sobre a lista de serviços
