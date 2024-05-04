@@ -52,6 +52,7 @@ services:
 
   plasmedis-api:
     image: thisk8brd/flask-api
+    container_name: plasmedis-api-container
     build:
       context: ./plasmedis-api
       dockerfile: ./Dockerfile
@@ -66,11 +67,12 @@ services:
     env_file:
       - ./plasmedis-api/.env
     depends_on:
-      - plasmedis-db
+      - plasmedisDb
     entrypoint: [ "python", "-m", "debugpy", "--listen", "0.0.0.0:5678", "-m", "app",  "--wait-for-client", "--multiprocess", "-m", "flask", "run", "-h", "0.0.0.0", "-p", "5000" ]
 
-  plasmedis-db:
+  plasmedisDb:
     image: postgres:13
+    container_name: plasmedisDb-container
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-1234}
@@ -86,6 +88,7 @@ services:
   plasmedis-web:
     tty: true
     stdin_open: true
+    container_name: plasmedis-web-container
     env_file:
       - ./plasmedis-web/.env
     image: node:16
