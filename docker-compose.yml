@@ -107,7 +107,9 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
+        - ./nginx.conf:/etc/nginx/nginx.conf
+        - ./certbot/conf:/etc/letsencrypt
+        - ./certbot/www:/var/www/certbot
 
   certbot:
     image: certbot/certbot
@@ -115,7 +117,7 @@ services:
     volumes:
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
-    command: certonly --webroot -w /var/www/certbot --force-renewal --email {email} -d {domain} --agree-tos
+    command: certonly --webroot -w /var/www/certbot --force-renewal --email danielsalis98@gmail.com -d plataforma.codelab-unifesp.org -d plasmedis.codelab-unifesp.org -d emtu.codelab-unifesp.org --agree-tos
 
 
 networks:
