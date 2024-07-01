@@ -12,3 +12,4 @@
 !.gitignore
 !nginx.conf
 !pg-init-scripts
+!create-multiple-postgresql-databases.sh
