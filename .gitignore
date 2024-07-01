@@ -11,5 +11,6 @@
 !required_dinamic_envvars.sh
 !.gitignore
 !nginx.conf
-!pg-init-scripts
+!postgres
 !create-multiple-postgresql-databases.sh
+!.env.sample

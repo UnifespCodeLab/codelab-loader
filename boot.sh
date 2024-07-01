@@ -6,6 +6,7 @@ services=(
     "emtu-api"
     "plasmedis-api"
     "plasmedis-web"
+    "postgres"
 )
 
 # Itera sobre a lista de serviços
