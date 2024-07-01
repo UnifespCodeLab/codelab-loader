@@ -58,7 +58,7 @@ services:
       dockerfile: ./Dockerfile
       target: debug
     ports:
-      - 5001:5000
+      - 5000:5000
       - 5678:5678
     volumes:
       - ./plasmedis-api:/usr/src/app
