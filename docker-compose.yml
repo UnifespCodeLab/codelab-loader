@@ -33,9 +33,9 @@ services:
     env_file:
       - ./emtu-api/.env
     depends_on:
-      - emtu-db
+      - postgres
     networks:
-      - emtu_network
+      - gerneral_network
 
   emtu-web:
     tty: true
@@ -58,7 +58,7 @@ services:
       dockerfile: ./Dockerfile
       target: debug
     ports:
-      - 5000:5000
+      - 5001:5000
       - 5678:5678
     volumes:
       - ./plasmedis-api:/usr/src/app
@@ -67,7 +67,7 @@ services:
     env_file:
       - ./plasmedis-api/.env
     depends_on:
-      - plasmedisDb
+      - postgres
     entrypoint: [ "python", "-m", "debugpy", "--listen", "0.0.0.0:5678", "-m", "app",  "--wait-for-client", "--multiprocess", "-m", "flask", "run", "-h", "0.0.0.0", "-p", "5000" ]
 
   plasmedisDb:
@@ -99,6 +99,23 @@ services:
     volumes:
       -  ./plasmedis-web:/app
 
+  postgres:
+    image: postgres:13
+    container_name: postgres-container
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-1234}
+      POSTGRES_MULTIPLE_DATABASES: plasmedis,emtu
+      PGDATA: /data/postgres
+    ports:
+      - "5433:5432"
+    restart: unless-stopped
+    volumes:
+      - ./data/postgres:/data/postgres
+      - ./pg-init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - gerneral_network
+
   nginx:
     container_name: nginx
     restart: unless-stopped
@@ -124,4 +141,6 @@ networks:
   emtu_network:
     driver: bridge
   plasmedis_network:
+    driver: bridge
+  gerneral_network:
     driver: bridge

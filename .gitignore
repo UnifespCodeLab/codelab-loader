@@ -11,3 +11,4 @@
 !required_dinamic_envvars.sh
 !.gitignore
 !nginx.conf
+!pg-init-scripts
