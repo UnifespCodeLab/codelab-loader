@@ -10,3 +10,7 @@
 !secrets.rb
 !required_dinamic_envvars.sh
 !.gitignore
+!nginx.conf
+!postgres
+!create-multiple-postgresql-databases.sh
+!.env.sample

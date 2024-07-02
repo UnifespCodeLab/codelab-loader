@@ -33,9 +33,9 @@ services:
     env_file:
       - ./emtu-api/.env
     depends_on:
-      - emtu-db
+      - postgres
     networks:
-      - emtu_network
+      - gerneral_network
 
   emtu-web:
     tty: true
@@ -67,7 +67,7 @@ services:
     env_file:
       - ./plasmedis-api/.env
     depends_on:
-      - plasmedisDb
+      - postgres
     entrypoint: [ "python", "-m", "debugpy", "--listen", "0.0.0.0:5678", "-m", "app",  "--wait-for-client", "--multiprocess", "-m", "flask", "run", "-h", "0.0.0.0", "-p", "5000" ]
 
   plasmedisDb:
@@ -99,9 +99,45 @@ services:
     volumes:
       -  ./plasmedis-web:/app
 
+  postgres:
+    image: postgres:13
+    container_name: postgres-container
+    env_file:
+      - ./postgres/.env
+    ports:
+      - "5433:5432"
+    restart: unless-stopped
+    volumes:
+      - ./data/postgres:/data/postgres
+      - ./postgres:/docker-entrypoint-initdb.d
+    networks:
+      - gerneral_network
+
+  nginx:
+    container_name: nginx
+    restart: unless-stopped
+    image: nginx
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+        - ./nginx.conf:/etc/nginx/nginx.conf
+        - ./certbot/conf:/etc/letsencrypt
+        - ./certbot/www:/var/www/certbot
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    command: certonly --webroot -w /var/www/certbot --force-renewal --email {digite_seu_email} -d {digite_seu_dominio} --agree-tos
+
 
 networks:
   emtu_network:
     driver: bridge
   plasmedis_network:
+    driver: bridge
+  gerneral_network:
     driver: bridge
