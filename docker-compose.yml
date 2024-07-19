@@ -110,6 +110,7 @@ services:
     volumes:
       - ./data/postgres:/data/postgres
       - ./postgres:/docker-entrypoint-initdb.d
+      - ./emtu-api:/emtu
     networks:
       - gerneral_network
 
