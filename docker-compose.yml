@@ -98,6 +98,19 @@ services:
       - 3001:3000
     volumes:
       -  ./plasmedis-web:/app
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+
+  graacc-web:
+    tty: true
+    stdin_open: true
+    image: node:18
+    working_dir: /app
+    command: make graacc-web-startup
+    ports:
+      - 3000:3000
+    volumes:
+      - ./graacc-web:/app
 
   postgres:
     image: postgres:13
