@@ -108,7 +108,7 @@ services:
     working_dir: /app
     command: make graacc-web-startup
     ports:
-      - 3000:3000
+      - 3002:3000
     volumes:
       - ./graacc-web:/app
 
