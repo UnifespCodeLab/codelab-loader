@@ -98,8 +98,6 @@ services:
       - 3001:3000
     volumes:
       -  ./plasmedis-web:/app
-    environment:
-      CHOKIDAR_USEPOLLING: "true"
 
   graacc-web:
     tty: true
