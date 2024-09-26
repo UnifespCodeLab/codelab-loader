@@ -109,6 +109,7 @@ services:
       - 3002:3000
     volumes:
       - ./graacc-web:/app
+    tmpfs: /tmp
 
   postgres:
     image: postgres:13
