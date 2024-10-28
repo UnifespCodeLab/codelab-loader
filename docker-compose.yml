@@ -98,6 +98,8 @@ services:
       - 3001:3000
     volumes:
       -  ./plasmedis-web:/app
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
 
   graacc-web:
     tty: true
@@ -110,6 +112,15 @@ services:
     volumes:
       - ./graacc-web:/app
     tmpfs: /tmp
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+
+  graacc-api-mock:
+    image: "wiremock/wiremock:latest"
+    volumes:
+      - ./graacc-api-mock/mappings:/home/wiremock/mappings
+    ports:
+      - 8080:8080
 
   postgres:
     image: postgres:13
